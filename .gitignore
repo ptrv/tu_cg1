@@ -1,0 +1,9 @@
+cg1_ex1/Debug
+cg1_ex1/Release
+
+
+# qt creator noise
+*.user
+
+# other
+*.exe
