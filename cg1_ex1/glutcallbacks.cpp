@@ -3,8 +3,8 @@
    purpose:        init, display and everything else needed by GLUT
    version:		   SKELETON CODE
    author:         andy nealen
-				   computer graphics
-				   tu berlin
+                   computer graphics
+                   tu berlin
    ------------------------------------------------------------- */
 
 #include <stdio.h>
@@ -39,9 +39,9 @@ Node* selected = &torso;
     keyboard    - keyboard callbacks
     mouseMenu   - right mouse button menu
     mouseMotion - apply rotation when dragging
-	mouse       - register mouse clicks
-	registerCallbacks - 
-	              register all callbacks with GLUT
+    mouse       - register mouse clicks
+    registerCallbacks -
+                  register all callbacks with GLUT
    ------------------------------------------------ */
 
 void init(void)
@@ -73,32 +73,32 @@ void init(void)
     // clear background to black and clear depth buffer
     glClearColor(0.0,0.0,0.0,1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
- 
-	// enable depth test (z-buffer)
-	glDepthFunc(GL_LESS);
-	glEnable(GL_DEPTH_TEST);
 
-	// enable normalization of vertex normals
-	glEnable(GL_NORMALIZE);
+    // enable depth test (z-buffer)
+    glDepthFunc(GL_LESS);
+    glEnable(GL_DEPTH_TEST);
+
+    // enable normalization of vertex normals
+    glEnable(GL_NORMALIZE);
 
     // initial view definitions
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-	// perspective projection
+    // perspective projection
     gluPerspective(40.0, 1.0, 1.0, 10.0);
-	glMatrixMode(GL_MODELVIEW);
+    glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-	// some output to console
-	printf("--------------------------------------------\n");
-	printf(" cg1_ex1 opengl robot scenegraph            \n");
-	printf("                                            \n");
-	printf(" keyboard:                                  \n");
+    // some output to console
+    printf("--------------------------------------------\n");
+    printf(" cg1_ex1 opengl robot scenegraph            \n");
+    printf("                                            \n");
+    printf(" keyboard:                                  \n");
     printf(" arrow keys: select node                          \n");
     printf(" x/X,y/Y,z/Z: rotate node                   \n");
     printf(" q/Q: quit program                          \n");
-	printf("                                            \n");
-	printf(" mouse:                                     \n");
+    printf("                                            \n");
+    printf(" mouse:                                     \n");
     printf(" right click: config menu              \n");
     printf(" left click+drag: rotate node              \n");
     printf("--------------------------------------------\n");
@@ -107,131 +107,131 @@ void init(void)
 // display callback for GLUT
 void display(void)
 {
-	// clear color and depth buffer
+    // clear color and depth buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// switch to opengl modelview matrix
+    // switch to opengl modelview matrix
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-	// position the camera at (0,0,3) looking down the
-	// negative z-axis at (0,0,0)
+    // position the camera at (0,0,3) looking down the
+    // negative z-axis at (0,0,0)
     gluLookAt(0.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-	
-	// draw the scenegraph
+
+    // draw the scenegraph
     sceneGraphTraversal(&torso);
 
-	// display back buffer
+    // display back buffer
     glutSwapBuffers();
 }
 
 // reshape-Callback for GLUT
 void reshape(int w, int h)
 {
-	// reshaped window aspect ratio
-	float aspect = (float) w / (float) h;
+    // reshaped window aspect ratio
+    float aspect = (float) w / (float) h;
 
     // viewport
     glViewport(0,0, (GLsizei) w, (GLsizei) h);
 
-	// clear background and depth buffer
+    // clear background and depth buffer
     glClearColor(0.0,0.0,0.0,1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // restore view definition after window reshape
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-	// perspective projection
+    // perspective projection
     gluPerspective(40.0, aspect, 1.0, 10.0);
 
-	display();
+    display();
 }
 
 // keyboard callback
 void keyboard(unsigned char key, int x, int y)
 {
-	// rotate selected node around 
-	// x,y and z axes with keypresses
+    // rotate selected node around
+    // x,y and z axes with keypresses
     switch( key ) {
-	case 'q':
-	case 'Q': exit(0);
-	case 'z':
-		selected->rz += 2.0;
-		display();
-		break;
-	case 'Z': 
-		selected->rz -= 2.0;
-		display();
-		break;
-	case 'x':
-		selected->rx += 2.0;
-		display();
-		break;
-	case 'X': 
-		selected->rx -= 2.0;
-		display();
-		break;
-	case 'y':
-		selected->ry += 2.0;
-		display();
-		break;
-	case 'Y': 
-		selected->ry -= 2.0;
-		display();
-		break;
-	default:
-		break;
-	}
+    case 'q':
+    case 'Q': exit(0);
+    case 'z':
+        selected->rz += 2.0;
+        display();
+        break;
+    case 'Z':
+        selected->rz -= 2.0;
+        display();
+        break;
+    case 'x':
+        selected->rx += 2.0;
+        display();
+        break;
+    case 'X':
+        selected->rx -= 2.0;
+        display();
+        break;
+    case 'y':
+        selected->ry += 2.0;
+        display();
+        break;
+    case 'Y':
+        selected->ry -= 2.0;
+        display();
+        break;
+    default:
+        break;
+    }
 }
 
 // the right button mouse menu
 void mouseMenu(int id)
 {
     switch (id) {
-		case 1: 
-		  delete sceneGraph;
-		  exit(0);
-		case 2: 
-			// select torso for transformations
-			selected = &torso;
-			break;
+    case 1:
+        delete sceneGraph;
+        exit(0);
+    case 2:
+        // select torso for transformations
+        selected = &torso;
+        break;
 
-		// XXX: allow selecting/transforming 
-		//      other body parts as well
+        // XXX: allow selecting/transforming
+        //      other body parts as well
 
-		// INSERT YOUR CODE HERE
+        // INSERT YOUR CODE HERE
 
-		// END XXX
+        // END XXX
 
-		default:
-			break;
-	}
+    default:
+        break;
+    }
 }
 
 // mouse motion
 void mouseMotion(int x, int y)
 {
-	// rotate selected node when left mouse button is pressed
-	if (lbutton) {
-		selected->rx += (float) (y-posy);
-		posy = y;
-		selected->ry += (float) (x-posx);
-		posx = x;
-		display();
-	}
+    // rotate selected node when left mouse button is pressed
+    if (lbutton) {
+        selected->rx += (float) (y-posy);
+        posy = y;
+        selected->ry += (float) (x-posx);
+        posx = x;
+        display();
+    }
 }
 
 // mouse callback
 void mouse(int btn, int state, int x, int y)
 {
-	if (btn == GLUT_LEFT) {
-		if (state == GLUT_UP) {
-			lbutton = 0;
-		}
-		if (state == GLUT_DOWN) {
-			lbutton = 1;
-			posx = x; posy = y;
-		}
-	}
+    if (btn == GLUT_LEFT) {
+        if (state == GLUT_UP) {
+            lbutton = 0;
+        }
+        if (state == GLUT_DOWN) {
+            lbutton = 1;
+            posx = x; posy = y;
+        }
+    }
 }
 
 // register callbacks with GLUT
@@ -243,14 +243,14 @@ void registerCallbacks(void)
     glutMotionFunc(mouseMotion);
     glutMouseFunc(mouse);
     glutCreateMenu(mouseMenu);
-       glutAddMenuEntry("quit",1);
-       glutAddMenuEntry("torso",2);
-	   // XXX: allow selecting/transforming 
-	   //      other body parts as well
-	   
-	   // INSERT YOUR CODE HERE
-	   
-	   // END XXX
+    glutAddMenuEntry("quit",1);
+    glutAddMenuEntry("torso",2);
+    // XXX: allow selecting/transforming
+    //      other body parts as well
+
+    // INSERT YOUR CODE HERE
+
+    // END XXX
     glutAttachMenu(GLUT_RIGHT_BUTTON);
     return;
 }

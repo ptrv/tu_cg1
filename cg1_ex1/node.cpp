@@ -4,8 +4,8 @@
    version:	   SKELETON CODE
    TODO:           transform, drawJoint
    author:         katrin lang
-		   computer graphics
-		   tu berlin
+           computer graphics
+           tu berlin
    ------------------------------------------------------------- */
 
 #include <iostream>
@@ -24,11 +24,11 @@
 // printline debugging won't work
 using namespace std;
 
- // constructor
-  Node::Node(float x, float y, float z, 
-       float length, float height, float width,
-       float jointx, float jointy, float jointz,
-       float rotx, float roty, float rotz){
+// constructor
+Node::Node(float x, float y, float z,
+           float length, float height, float width,
+           float jointx, float jointy, float jointz,
+           float rotx, float roty, float rotz){
 
     this->selected= false;
 
@@ -52,7 +52,7 @@ using namespace std;
     this->child= NULL;
     this->previous= NULL;
     this->next= NULL;
-  }
+}
 
 // destructor
 // nothing to do so far
@@ -62,79 +62,81 @@ Node::~Node(){}
 // and adds this node 
 // to the list of the parent's children
 void Node::setParent(Node* parent){
-  
-  this->parent= parent;
-  if(parent->child==NULL){
-    parent->child= this;
-  }
-  else{
-    Node *sibling= parent->child;
-    while(sibling->next != NULL) sibling= sibling->next;
-    sibling->next= this;
-    this->previous= sibling;
-  }
+
+    this->parent= parent;
+    if(parent->child==NULL){
+        parent->child= this;
+    }
+    else{
+        Node *sibling= parent->child;
+        while(sibling->next != NULL) sibling= sibling->next;
+        sibling->next= this;
+        this->previous= sibling;
+    }
 }
 
-  // transform an individual node
-  // according to its position, 
-  // rotation, and rotation center
-  // XXX: NEEDS TO BE IMPLEMENTED
+// transform an individual node
+// according to its position,
+// rotation, and rotation center
+// XXX: NEEDS TO BE IMPLEMENTED
 void Node::transform(){
- 
-	// note the order of the operations:
-	// the transformations are applied in "reverse" order
-	// of glRotate/glTranslate calls
-	// (also see cg1 lecture notes on this topic)
 
-	// translate to final position
-	// XXX
+    // note the order of the operations:
+    // the transformations are applied in "reverse" order
+    // of glRotate/glTranslate calls
+    // (also see cg1 lecture notes on this topic)
 
-	// INSERT YOUR CODE HERE
+    // translate to final position
+    // XXX
 
-	// END XXX
+    // INSERT YOUR CODE HERE
+    glTranslatef(x, y, z);
+    // END XXX
 
-	// translate node center to joint position
-	// XXX
+    // translate node center to joint position
+    // XXX
 
-	// INSERT YOUR CODE HERE
+    // INSERT YOUR CODE HERE
+    glTranslatef(jointx, jointy, jointz);
+    // END XXX
 
-	// END XXX
+    // apply this node's rotation
+    // XXX
 
-	// apply this node's rotation
-	// XXX
+    // INSERT YOUR CODE HERE
+    glRotatef(rotx, 1, 0, 0);
+    glRotatef(roty, 0, 1, 0);
+    glRotatef(rotz, 0, 0, 1);
+    // END XXX
 
-        // INSERT YOUR CODE HERE
+    // draw Joint (rotation center)
+    drawJoint();
 
-	// END XXX
+    // translate center of rotation into limb's origin
+    // XXX
 
-	// draw Joint (rotation center)
-	drawJoint();
-
-	// translate center of rotation into limb's origin
-	// XXX
-
-	// INSERT YOUR CODE HERE
-
-	// END XXX
+    // INSERT YOUR CODE HERE
+    glTranslatef(-jointx, -jointy, -jointz);
+    // END XXX
 }
 
 // draw an individual node
 void Node::draw(){
 
-	// save lighting bit for red light
-	glPushAttrib(GL_LIGHTING_BIT);
+    // save lighting bit for red light
+    glPushAttrib(GL_LIGHTING_BIT);
 
-	GLfloat red[]= {1.0, 0, 0};
-	if(selected) glLightModelfv(GL_LIGHT_MODEL_AMBIENT, red);
+    GLfloat red[]= {1.0, 0, 0};
+    if(selected) glLightModelfv(GL_LIGHT_MODEL_AMBIENT, red);
 
-	glPushMatrix();
+    glPushMatrix();
 
-	glScalef(length, height, width);
-	glutSolidCube(1.0);
+    glScalef(length, height, width);
+    glutSolidCube(1.0);
 
-	glPopMatrix();
+    glPopMatrix();
 
-	glPopAttrib();
+    glPopAttrib();
 }
 
 // draw the joint (rotation center)
@@ -142,64 +144,72 @@ void Node::draw(){
 // XXX: NEEDS TO BE IMPLEMENTED
 void Node::drawJoint(){
 
-	// save enable bit for lighting
-	// and current bit for color
-	glPushAttrib(GL_ENABLE_BIT | GL_CURRENT_BIT);
+    // save enable bit for lighting
+    // and current bit for color
+    glPushAttrib(GL_ENABLE_BIT | GL_CURRENT_BIT);
 
-	// draw coordinate axes at center of rotation
-	// note: lighting disabled for axis drawing
-	glDisable(GL_LIGHTING);
+    // draw coordinate axes at center of rotation
+    // note: lighting disabled for axis drawing
+    glDisable(GL_LIGHTING);
 
-	// draw a sphere at center of rotation
-	// (with glutwiredphere...)
-	// XXX
+    // draw a sphere at center of rotation
+    // (with glutwiredphere...)
+    // XXX
 
-	// INSERT YOUR CODE HERE
+    // INSERT YOUR CODE HERE
+    glutWireSphere(width/2, 16, 16);
+    // END XXX
 
-	// END XXX
+    glBegin(GL_LINES);
 
-	glBegin(GL_LINES);
+    // XXX: DRAW X,Y AND Z AXES IN RED,GREEN AND BLUE
+    //      SEE PROVIDED cg1_ex1.exe (win32) AND cg1_ex1 (linux)
 
-	// XXX: DRAW X,Y AND Z AXES IN RED,GREEN AND BLUE
-	//      SEE PROVIDED cg1_ex1.exe (win32) AND cg1_ex1 (linux)
+    // INSERT YOUR CODE HERE
+    glColor3f(1.0f,0.0f,0.0f);
+    glVertex3f(0,0,0);
+    glVertex3f(width,0,0);
+    glColor3f(0.0f,1.0f,0.0f);
+    glVertex3f(0,0,0);
+    glVertex3f(0, width, 0);
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex3f( 0, 0, 0);
+    glVertex3f(0, 0, width);
+    // END XXX
 
-	// INSERT YOUR CODE HERE
-
-	// END XXX
-
-	glEnd();
-	glPopAttrib();
+    glEnd();
+    glPopAttrib();
 }
 
 // increment / decrement rotation
 void Node::rotate(float x, float y, float z){
-  
-  rotx+= x;
-  roty+= y;
-  rotz+= z;
+
+    rotx+= x;
+    roty+= y;
+    rotz+= z;
 }
 
 Node *Node::getNext(){
-  return next;
+    return next;
 }
 
 Node *Node::getPrevious(){
-  return previous;
+    return previous;
 }
 
 Node *Node::getParent(){
-  return parent;
+    return parent;
 }
 
 Node *Node::getChild(){
-  return child;
+    return child;
 }
 
 void Node::select(){
-  selected= true;
+    selected= true;
 }
 
 void Node::deselect(){
-  selected= false;
+    selected= false;
 }
 

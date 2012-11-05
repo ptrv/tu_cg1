@@ -4,8 +4,8 @@
    version:	   SKELETON CODE
    TODO:           nothing (see robot.cpp)
    author:         katrin lang
-		   computer graphics
-		   tu berlin
+           computer graphics
+           tu berlin
    ------------------------------------------------------------- */
 
 #pragma once

@@ -1,9 +1,7 @@
+# assignments
 cg1_ex1/Debug
 cg1_ex1/Release
-
-
-# qt creator noise
-*.user
+cg1_ex1/cg1_ex1
 
 # other
 *.exe

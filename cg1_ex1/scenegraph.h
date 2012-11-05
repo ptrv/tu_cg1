@@ -4,8 +4,8 @@
    version:	   SKELETON CODE
    TODO:           nothing (see scenegraph.cpp)
    author:         katrin lang
-		   computer graphics
-		   tu berlin
+           computer graphics
+           tu berlin
    ------------------------------------------------------------- */
 
 #pragma once
@@ -19,42 +19,42 @@ extern SceneGraph *sceneGraph;
 
 class SceneGraph{
 
- public:
-  
-  SceneGraph(Node *root);
+public:
 
-  ~SceneGraph();
+    SceneGraph(Node *root);
 
-  // traverse and draw the scenegraph
-  void traverse();
+    ~SceneGraph();
 
-  // navigation in tree
-  // (needed for node selection)
-  void up();
-  void down();
-  void left();
-  void right();
+    // traverse and draw the scenegraph
+    void traverse();
 
-  // increment / decrement rotation of selected node
-  void rotate(float x, float y, float z);
+    // navigation in tree
+    // (needed for node selection)
+    void up();
+    void down();
+    void left();
+    void right();
 
-  // reset all rotations
-  void reset();
+    // increment / decrement rotation of selected node
+    void rotate(float x, float y, float z);
 
- private:
+    // reset all rotations
+    void reset();
 
-  // root node
-  Node *root; 
+private:
 
-  // currently selected node
-  Node *selected;
+    // root node
+    Node *root;
 
-  // traverse and draw the scenegraph from a given node
-  void traverse(Node *node);
+    // currently selected node
+    Node *selected;
 
-  // reset all rotations below given node
-  void reset(Node *node);
+    // traverse and draw the scenegraph from a given node
+    void traverse(Node *node);
 
-  // destroy all nodes
-  void clear(Node *node);
+    // reset all rotations below given node
+    void reset(Node *node);
+
+    // destroy all nodes
+    void clear(Node *node);
 };
