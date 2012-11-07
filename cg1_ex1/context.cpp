@@ -8,8 +8,6 @@
            tu berlin
    ------------------------------------------------------------- */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <iostream>
 #ifdef __APPLE__ 
 #include <GLUT/glut.h>
@@ -181,7 +179,7 @@ void Context::reshape(int w, int h){
 }
 
 // keyboard callback
-void Context::keyPressed(unsigned char key, int x, int y){
+void Context::keyPressed(unsigned char key, int /*x*/, int /*y*/){
 
     float step= 2.0;
 
@@ -221,6 +219,7 @@ void Context::keyPressed(unsigned char key, int x, int y){
         // INSERT YOUR CODE HERE
     case 'r':
         sceneGraph->reset();
+        angleCamera = 0.0;
         display();
         break;
         // END XXX
@@ -232,7 +231,7 @@ void Context::keyPressed(unsigned char key, int x, int y){
 
 // keyboard callback for special keys
 // (arrow keys for node selection)
-void Context::specialKeys(int key, int x, int y){
+void Context::specialKeys(int key, int /*x*/, int /*y*/){
 
     // rotate selected node around
     // x,y and z axes with keypresses
@@ -391,26 +390,21 @@ void Context::listHits(GLint hits, GLuint *names)
     //3. Max Z
     //4. Name of the hit (glLoadName)
 
-//    if(hits == 1)
-//    {
-//        sceneGraph->selectName(names[3]);
-//        return;
-//    }
+    if(hits == 1)
+    {
+        sceneGraph->selectName(names[3]);
+        return;
+    }
 
     unsigned int minZ = std::numeric_limits<unsigned int>::max();
     int indexToSelect = -1;
 
     for (int i = 0; i < hits; i++)
     {
-        printf(	"Number: %d\n"
-                "Min Z: %d\n"
-                "Max Z: %d\n"
-                "Name on stack: %d\n",
-                (unsigned)names[i * 4],
-                (unsigned)names[i * 4 + 1],
-                (unsigned)names[i * 4 + 2],
-                (unsigned)names[i * 4 + 3]
-                );
+//        cout << "Number: " << names[i * 4] << endl;
+//        cout << "Min Z: " << names[i * 4 + 1] << endl;
+//        cout << "Max Z: " << names[i * 4 + 2] << endl;
+//        cout << "Name on stack: " << names[i * 4 + 3] << endl;
 
         if(names[i * 4 + 1] < minZ)
         {
@@ -418,7 +412,7 @@ void Context::listHits(GLint hits, GLuint *names)
             indexToSelect = (unsigned)names[i * 4 + 3];
         }
     }
-    if(hits > 0)
+    if(hits > 1)
     {
         sceneGraph->selectName(indexToSelect);
     }
