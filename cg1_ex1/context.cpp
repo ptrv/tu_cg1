@@ -8,6 +8,8 @@
            tu berlin
    ------------------------------------------------------------- */
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <iostream>
 #ifdef __APPLE__ 
 #include <GLUT/glut.h>
@@ -22,6 +24,8 @@
 #include "context.h"
 
 #include <limits>
+#include <sys/time.h>
+
 // a bunch of variables
 
 // window dimensions
@@ -40,6 +44,10 @@ GLfloat Context::nearPlane, Context::farPlane;
 bool Context::leftButton;
 // mouse position in previous frame
 int Context::mouseX, Context::mouseY;
+
+bool Context::isAnimation = false;
+float angleCamera = 0.0;
+int Context::lastTime;
 
 // set parameters to your own liking 
 // (or leave them as they are)
@@ -111,6 +119,8 @@ void Context::init(int argc, char **argv){
 
     registerCallbacks();
 
+    lastTime = glutGet(GLUT_ELAPSED_TIME);
+
     // some output to console
     cout << "--------------------------------------------\n";
     cout << " cg1_ex1 opengl robot scenegraph            \n";
@@ -138,8 +148,10 @@ void Context::display(void){
     glLoadIdentity();
     // position the camera at (0,0,cameraZ) looking down the
     // negative z-axis at (0,0,0)
-    gluLookAt(0.0, 0.0, cameraZ, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+//    gluLookAt(0.0, 0.0, cameraZ, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
+    gluLookAt(cameraZ * sin(angleCamera), 0.0f, cameraZ * cos(angleCamera),
+              0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
     // draw the scenegraph
     sceneGraph->traverse();
 
@@ -274,7 +286,9 @@ void Context::menu(int id){
         // XXX: add more options (optional)
 
         // INSERT YOUR CODE HERE
-
+    case 3:
+        isAnimation = !isAnimation;
+        break;
         // END XXX
 
     default:
@@ -312,7 +326,19 @@ void Context::mousePressed(int button, int state, int x, int y){
 }
 
 // playground (not registered)
-void Context::idle(void){}
+void Context::idle(void)
+{
+        // calculate time difference from last frame
+        int timeNow = glutGet(GLUT_ELAPSED_TIME);
+        int timeDiff = (timeNow - lastTime);
+        lastTime = timeNow;
+        if(isAnimation)
+        {
+            angleCamera += (timeDiff/1000.0);
+        }
+
+        glutPostRedisplay();
+}
 
 void Context::select(int x, int y)
 {
@@ -356,50 +382,43 @@ void Context::select(int x, int y)
 
 void Context::listHits(GLint hits, GLuint *names)
 {
-    /*
-            For each hit in the buffer are allocated 4 bytes:
-            1. Number of hits selected (always one,
-                                        beacuse when we draw each object
-                                        we use glLoadName, so we replace the
-                                        prevous name in the stack)
-            2. Min Z
-            3. Max Z
-            4. Name of the hit (glLoadName)
-        */
+    //For each hit in the buffer are allocated 4 bytes:
+    //1. Number of hits selected (always one,
+    //                            beacuse when we draw each object
+    //                            we use glLoadName, so we replace the
+    //                            prevous name in the stack)
+    //2. Min Z
+    //3. Max Z
+    //4. Name of the hit (glLoadName)
 
-//    printf("%d hits:\n", hits);
-
-    if(hits == 1)
-    {
-        sceneGraph->selectName(names[3]);
-        return;
-    }
+//    if(hits == 1)
+//    {
+//        sceneGraph->selectName(names[3]);
+//        return;
+//    }
 
     unsigned int minZ = std::numeric_limits<unsigned int>::max();
     int indexToSelect = -1;
 
     for (int i = 0; i < hits; i++)
     {
-//        printf(	"Number: %d\n"
-//                "Min Z: %d\n"
-//                "Max Z: %d\n"
-//                "Name on stack: %d\n",
-//                names[i * 4],
-//                names[i * 4 + 1],
-//                names[i * 4 + 2],
-//                names[i * 4 + 3]
-//                );
-//        cout << names[i * 4 + 0] << endl;
-//        cout << names[i * 4 + 1] << endl;
-//        cout << names[i * 4 + 2] << endl;
-//        cout << names[i * 4 + 3] << endl;
+        printf(	"Number: %d\n"
+                "Min Z: %d\n"
+                "Max Z: %d\n"
+                "Name on stack: %d\n",
+                (unsigned)names[i * 4],
+                (unsigned)names[i * 4 + 1],
+                (unsigned)names[i * 4 + 2],
+                (unsigned)names[i * 4 + 3]
+                );
+
         if(names[i * 4 + 1] < minZ)
         {
             minZ = names[i * 4 + 1];
-            indexToSelect = names[i * 4 + 3];
+            indexToSelect = (unsigned)names[i * 4 + 3];
         }
     }
-    if(hits > 1)
+    if(hits > 0)
     {
         sceneGraph->selectName(indexToSelect);
     }
@@ -414,6 +433,7 @@ void Context::registerCallbacks(void){
     glutReshapeFunc(reshape);
     glutMotionFunc(mouseMoved);
     glutMouseFunc(mousePressed);
+    glutIdleFunc(idle);
     glutCreateMenu(menu);
     glutAddMenuEntry("quit",1);
 
@@ -426,7 +446,7 @@ void Context::registerCallbacks(void){
     // XXX: add more options (optional)
 
     // INSERT YOUR CODE HERE
-
+    glutAddMenuEntry("animation", 3);
     // END XXX
 
     glutAttachMenu(GLUT_RIGHT_BUTTON);

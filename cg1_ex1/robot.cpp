@@ -37,7 +37,7 @@ Node *buildRobot(){
     Node* head = new Node(0, 250, 0,
                           100, 100, 50,
                           0, -75, 0,
-                          0, 0, 0);
+                          20, 35, 0);
     Node* leftArm = new Node(150, 0, 0,
                              50, 200, 50,
                              -25, 100, 0,

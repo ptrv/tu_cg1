@@ -42,7 +42,6 @@ public:
     void reset();
 
     bool selectName(int name);
-    bool selectName(Node* n, int name);
 
 private:
 
@@ -60,4 +59,7 @@ private:
 
     // destroy all nodes
     void clear(Node *node);
+
+    bool selectName(Node* node, int name);
+
 };

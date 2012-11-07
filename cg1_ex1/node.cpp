@@ -49,6 +49,10 @@ Node::Node(float x, float y, float z,
     this->roty= roty;
     this->rotz= rotz;
 
+    this->initRotx = this->rotx;
+    this->initRoty = this->roty;
+    this->initRotz = this->rotz;
+
     this->parent= NULL;
     this->child= NULL;
     this->previous= NULL;
@@ -161,7 +165,8 @@ void Node::drawJoint(){
     // XXX
 
     // INSERT YOUR CODE HERE
-    glutWireSphere(25, 16, 16);
+    glLoadName(nodeId+nodeName);
+    glutWireSphere(25, 16, 8);
     // END XXX
 
     glBegin(GL_LINES);

@@ -148,9 +148,9 @@ void SceneGraph::reset(Node* node){
     // reset rotations
     // XXX
     // INSERT YOUR CODE HERE
-    node->rotx = 0;
-    node->roty = 0;
-    node->rotz = 0;
+    node->rotx = node->initRotx;
+    node->roty = node->initRoty;
+    node->rotz = node->initRotz;
     reset(node->child);
     reset(node->next);
     // END XXX
@@ -158,35 +158,35 @@ void SceneGraph::reset(Node* node){
 
 bool SceneGraph::selectName(int name)
 {
-    selectName(root, name);
+    return selectName(root, name);
 }
 
-bool SceneGraph::selectName(Node* n, int name)
+bool SceneGraph::selectName(Node* node, int name)
 {
-    if(n == NULL)
+    if(node == NULL)
         return false;
 
-    if(n->nodeName == name)
+    if(node->nodeName == name)
     {
         selected->deselect();
-        selected = n;
+        selected = node;
         selected->select();
         return true;
     }
     else
     {
         bool selectedChild=false;
-        if(n->child)
+        if(node->child)
         {
-            selectedChild = selectName(n->child, name);
+            selectedChild = selectName(node->child, name);
         }
         if(selectedChild)
         {
             return true;
         }
-        else if(n->next)
+        else if(node->next)
         {
-            return selectName(n->next, name);
+            return selectName(node->next, name);
         }
     }
     return false;

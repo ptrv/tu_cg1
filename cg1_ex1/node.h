@@ -112,6 +112,9 @@ protected:
     float roty;     	// of node relative
     float rotz;	    	// to parent node rotation
 
+    float initRotx;
+    float initRoty;
+    float initRotz;
     // is node selected?
     bool selected;
 

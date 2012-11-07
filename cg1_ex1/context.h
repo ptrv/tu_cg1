@@ -55,6 +55,9 @@ extern bool leftButton;
 // mouse position in previous frame
 extern int mouseX, mouseY;
 
+extern int lastTime;
+extern bool isAnimation;
+
 // initialize above variables
 void config();
 
