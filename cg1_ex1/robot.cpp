@@ -34,9 +34,9 @@ Node *buildRobot(){
     // XXX: implement more body/robot/whatever parts here
 
     // INSERT YOUR CODE HERE
-    Node* head = new Node(0, 225, 0,
+    Node* head = new Node(0, 250, 0,
                           100, 100, 50,
-                          0, -50, 0,
+                          0, -75, 0,
                           0, 0, 0);
     Node* leftArm = new Node(150, 0, 0,
                              50, 200, 50,
@@ -64,11 +64,11 @@ Node *buildRobot(){
                               0, 0, 0);
     Node* leftFoot= new Node(0, -150, 50,
                              50, 25, 75,
-                             0, 50, -50,
+                             0, 25, -50,
                              0, 0, 0);
     Node* rightFoot = new Node(0, -150, 50,
                                50, 25, 75,
-                               0, 50, -50,
+                               0, 25, -50,
                                0, 0, 0);
 
     // END XXX

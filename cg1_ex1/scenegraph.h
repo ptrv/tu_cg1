@@ -41,6 +41,9 @@ public:
     // reset all rotations
     void reset();
 
+    bool selectName(int name);
+    bool selectName(Node* n, int name);
+
 private:
 
     // root node

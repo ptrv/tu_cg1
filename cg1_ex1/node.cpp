@@ -24,6 +24,7 @@
 // printline debugging won't work
 using namespace std;
 
+int Node::nodeId = 0;
 // constructor
 Node::Node(float x, float y, float z,
            float length, float height, float width,
@@ -52,6 +53,8 @@ Node::Node(float x, float y, float z,
     this->child= NULL;
     this->previous= NULL;
     this->next= NULL;
+
+    this->nodeName = ++nodeId;
 }
 
 // destructor
@@ -129,6 +132,7 @@ void Node::draw(){
     GLfloat red[]= {1.0, 0, 0};
     if(selected) glLightModelfv(GL_LIGHT_MODEL_AMBIENT, red);
 
+    glLoadName(nodeName);
     glPushMatrix();
 
     glScalef(length, height, width);
@@ -157,7 +161,7 @@ void Node::drawJoint(){
     // XXX
 
     // INSERT YOUR CODE HERE
-    glutWireSphere(width/2, 16, 16);
+    glutWireSphere(25, 16, 16);
     // END XXX
 
     glBegin(GL_LINES);

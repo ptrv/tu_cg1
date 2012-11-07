@@ -21,6 +21,7 @@
 #include "scenegraph.h"
 #include "context.h"
 
+#include <limits>
 // a bunch of variables
 
 // window dimensions
@@ -304,12 +305,105 @@ void Context::mousePressed(int button, int state, int x, int y){
             leftButton= true;
             mouseX = x;
             mouseY = y;
+            select(x, height-y);
+            display();
         }
     }
 }
 
 // playground (not registered)
 void Context::idle(void){}
+
+void Context::select(int x, int y)
+{
+    GLuint buff[256] = {0};
+    GLint hits, view[4];
+//    int id;
+
+    // This choose the buffer where store the values for the selection data
+    glSelectBuffer(256, buff);
+    //This retrieve info about the viewport
+    glGetIntegerv(GL_VIEWPORT, view);
+    //Switching in selecton mode
+    glRenderMode(GL_SELECT);
+    //Clearing the name's stack
+    //This stack contains all the info about the objects
+    glInitNames();
+    //Now fill the stack with one element (or glLoadName will generate an error)
+    glPushName(0);
+    //Now modify the vieving volume, restricting selection area around the cursor
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    //restrict the draw to an area around the cursor
+    gluPickMatrix(x, y, 1.0, 1.0, view);
+    gluPerspective(fov, width/height, nearPlane, farPlane);
+    //Draw the objects onto the screen
+    glMatrixMode(GL_MODELVIEW);
+    //draw only the names in the stack, and fill the array
+    glutSwapBuffers();
+    display();
+    //Do you remeber? We do pushMatrix in PROJECTION mode
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    //get number of objects drawed in that area
+    //and return to render mode
+    hits = glRenderMode(GL_RENDER);
+    //Print a list of the objects
+    listHits(hits, buff);
+    glMatrixMode(GL_MODELVIEW);
+}
+
+void Context::listHits(GLint hits, GLuint *names)
+{
+    /*
+            For each hit in the buffer are allocated 4 bytes:
+            1. Number of hits selected (always one,
+                                        beacuse when we draw each object
+                                        we use glLoadName, so we replace the
+                                        prevous name in the stack)
+            2. Min Z
+            3. Max Z
+            4. Name of the hit (glLoadName)
+        */
+
+//    printf("%d hits:\n", hits);
+
+    if(hits == 1)
+    {
+        sceneGraph->selectName(names[3]);
+        return;
+    }
+
+    unsigned int minZ = std::numeric_limits<unsigned int>::max();
+    int indexToSelect = -1;
+
+    for (int i = 0; i < hits; i++)
+    {
+//        printf(	"Number: %d\n"
+//                "Min Z: %d\n"
+//                "Max Z: %d\n"
+//                "Name on stack: %d\n",
+//                names[i * 4],
+//                names[i * 4 + 1],
+//                names[i * 4 + 2],
+//                names[i * 4 + 3]
+//                );
+//        cout << names[i * 4 + 0] << endl;
+//        cout << names[i * 4 + 1] << endl;
+//        cout << names[i * 4 + 2] << endl;
+//        cout << names[i * 4 + 3] << endl;
+        if(names[i * 4 + 1] < minZ)
+        {
+            minZ = names[i * 4 + 1];
+            indexToSelect = names[i * 4 + 3];
+        }
+    }
+    if(hits > 1)
+    {
+        sceneGraph->selectName(indexToSelect);
+    }
+}
 
 // register callbacks with GLUT
 void Context::registerCallbacks(void){

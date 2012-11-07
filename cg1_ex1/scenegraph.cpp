@@ -155,3 +155,39 @@ void SceneGraph::reset(Node* node){
     reset(node->next);
     // END XXX
 }
+
+bool SceneGraph::selectName(int name)
+{
+    selectName(root, name);
+}
+
+bool SceneGraph::selectName(Node* n, int name)
+{
+    if(n == NULL)
+        return false;
+
+    if(n->nodeName == name)
+    {
+        selected->deselect();
+        selected = n;
+        selected->select();
+        return true;
+    }
+    else
+    {
+        bool selectedChild=false;
+        if(n->child)
+        {
+            selectedChild = selectName(n->child, name);
+        }
+        if(selectedChild)
+        {
+            return true;
+        }
+        else if(n->next)
+        {
+            return selectName(n->next, name);
+        }
+    }
+    return false;
+}

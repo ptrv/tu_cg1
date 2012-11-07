@@ -48,6 +48,7 @@ class Node{
 
 public:
 
+    static int nodeId;
     // constructor
     Node(float x, float y, float z,
          float length, float height, float width,
@@ -113,6 +114,8 @@ protected:
 
     // is node selected?
     bool selected;
+
+    int nodeName;
 
     // siblings
     Node* next;

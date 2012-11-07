@@ -96,4 +96,8 @@ void menu(int id);
 // idle callback (for animations)
 // register with glutIdleFunc(idle)
 void idle(void);
+
+void select(int x, int y);
+void listHits(GLint hits, GLuint *names);
+
 };
